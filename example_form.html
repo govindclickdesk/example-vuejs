@@ -1,0 +1,71 @@
+<!-- Start of Dynamic Form -->
+<div class="example-form-wrapper">
+
+    <!--Title -->
+    <h3 v-show="config.title" v-if="!config.show_modal && !config.hide_name && config.name">{{config.title}}</h3>
+
+    <!-- Form -->
+    <form @submit.prevent="submit_form" :name="get_form_name()" :id="config.id" :class="config.class">
+
+        <!-- Input Fields -->
+        <div :class="config.class" v-for="input in config.inputs" :key="input.title">
+
+            <!-- Show Label -->
+            <label :for="input.label" v-show="input.label && input.type != 'hidden' && input.type != 'checkbox'">{{ input.label }}
+                <span v-if="input.required" class="required-field">*</span>
+            </label>
+
+            <!-- hidden input -->
+            <input v-if="input.type === 'hidden'" class="form-control" type="hidden" :name="input.name" :placeholder="input.placeholder"
+                :value="model[input.name]">
+
+            <!-- text input -->
+            <input v-else-if="input.type === 'text'" :required="input.required" :minlength="input.min_length" :maxlength="input.max_length"
+                class="form-control" :class="input.class" type="text" :name="input.name" :placeholder="input.placeholder" :value="model[input.name]"
+                @change="onchange($event, input)">
+
+
+            <!-- email input -->
+            <input v-else-if="input.type === 'email'" :required="input.required" :minlength="input.min_length" :maxlength="input.max_length"
+                class="form-control" :class="input.class" type="email" :name="input.name" :placeholder="input.placeholder" :value="model[input.name]">
+
+            <!-- password input -->
+            <input v-else-if="input.type === 'password'" :required="input.required" :minlength="input.min_length" :maxlength="input.max_length"
+                class="form-control" :class="input.class" type="password" :name="input.name" :placeholder="input.placeholder"
+                :value="model[input.name]">
+
+            <!-- Bootstrap Date input -->
+            <agile-datepicker v-else-if="input.type === 'bootstrap_date'" :config="input"></agile-datepicker>
+
+            <!-- select -->
+            <select v-else-if="input.type ==='select'" :required="input.required" class="form-control" :name="input.name" @change="onchange($event, input)"
+                :multiple="input.multi_select" :value="model[input.name]">
+                <template v-for="option in input.options">
+                    <option :value="option.value ? option.value : option" :selected="model[input.name] === (option.value ? option.value : option)">{{option.label ? option.label : option}}</option>
+                </template>
+            </select>
+
+        </div>
+
+        <!-- Buttons -->
+        <template v-for="input in config.buttons" :key="input.title" v-if="!config.show_modal && config.inputs && config.inputs.length > 0">
+
+            <!-- Cancel -->
+            <button v-if="input.type=='cancel'" v-data="input" :id="input.id" :class="[{'btn' : true}, input.class]" @click.prevent="execute_form_action(input.action)">{{input.label}}</button> &nbsp;
+
+            <!-- Other buttons -->
+            <button v-else v-data="input" :id="input.id" :type="input.type" :class="[{'btn' : true}, input.class]" :value="input.label"
+                :form="config.id" :formnovalidate="input.type === 'submit'" @click="execute_form_action(input.action)">{{input.label}}</button> &nbsp;
+
+        </template>
+        <!-- End of Buttons -->
+
+        <!-- Show error -->
+        <div v-if="config.status">
+            <alert v-if="status.message" :config="status"></alert>
+        </div>
+
+    </form>
+
+</div>
+<!-- End of Dynamic Form -->
