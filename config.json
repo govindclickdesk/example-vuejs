@@ -1,0 +1,33 @@
+{
+	"name": "Login",
+	"inputs": [{
+			"label": "User ID (Your Email Address)",
+			"type": "email",
+			"required": true,
+			"placeholder": "Enter your email",
+			"name": "email",
+			"class": "form-control-lg"
+		},
+		{
+			"label": "Password",
+			"type": "password",
+			"required": true,
+			"placeholder": "Enter your password",
+			"name": "password",
+			"min_length": 6,
+			"hint": "Minimum 6 characters",
+			"class": "form-control-lg"
+		}
+	],
+	"buttons": [{
+		"type": "submit",
+		"label": "Submit",
+		"post_url": "/dev/api/login",
+		"success": {
+			"navigate": "/home"
+		}
+	}, {
+		"type": "cancel",
+		"label": "Cancel"
+	}]
+}
